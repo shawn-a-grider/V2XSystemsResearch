@@ -1,0 +1,4 @@
+pandas==3.0.3
+gymnasium==1.2.3
+numpy==2.4.6
+plotly==5.24.1
