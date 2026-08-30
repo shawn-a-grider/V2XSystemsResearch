@@ -14,7 +14,7 @@ class SignalDecisionEnv (gym.Env):
         self.min_velocity = 0.0
         self.max_velocity = 110.0
         self.stop_line = 0.0 
-        self.data_path = "/Users/shawngrider/v2x_systemsresearch/data/spat_sample500k.csv"
+        self.data_path = "data/spat_sample500k.csv"
         self.cycles = rl_event(self.data_path)
         self.all_cycles = [cycle for cycles in self.cycles.values() for cycle in cycles]
         self.lookahead = lookahead * self.dt
