@@ -17,7 +17,7 @@ I used data from the public Utah Department of Transportation dataset, containin
 
 ### Environment
 
-The RL environment provided the agent with an action space between -1 and 1, its jerk control. -1 is taken to mean the agent wants to press the brakes as hard as possible, while 1 means it wants to accelerate as fast as possible. This action is normalized to a feasible jerk governed by min/max acceleration and velocities. The chosen jerk then adjusts the state (pos, vel, acc) of the vehicle relative to the signal via matrix multiplication. 
+The RL environment provided the agent with an action space of a scalar between -1 and 1, its jerk control. -1 is taken to mean the agent wants to press the brakes as hard as possible, while 1 means it wants to accelerate as fast as possible. This action is normalized to a feasible jerk governed by min/max acceleration and velocities. The chosen jerk then adjusts the state (pos, vel, acc) of the vehicle relative to the signal via matrix multiplication ($x_{t+1} = A x_t + B u_t$). 
 
 The agent sees an observation space of the (pos, vel, acc) vector, the current signal, and the future signal n timesteps from now (which is what we are testing). 
 
@@ -27,7 +27,7 @@ The agent receives reward for successfully crossing the intersection, loses rewa
 
 ### Model
 
-The training diagnostics have shown stable, sensible results for the agent's training. The reward starts in the high negatives and converges toward zero, entropy loss decreased toward a stable, nonzero value, the explained variance stabilized over .9. 
+The training diagnostics have shown stable, sensible results for the agent's training. The reward starts in the high negatives and stabilizes close to zero, entropy loss decreased toward a stable, nonzero value, the explained variance stabilized over .9. 
 
 The Kullback-Leibler divergence is generally bounded but has relatively large fluctuations, which I initially suspect is due to tail cases of signals lasting much longer or much shorter than normal due to possibly high variability in the signals or errors in the dataset. I aim to additionally evaluate whether the model can become more confident in its actions and better learn to navigate tail case situations if also trained on high variance-injected synthetic data. 
 
@@ -37,11 +37,11 @@ Thus far, I have evaluated the model's movements by how many red light violation
 
 ## Initial Results
 
-I have tested the model while trained on 0, 1, 3, 5, 8 seconds of future data of the signal, and there is not sufficient evidence to conclude the agent performs better on larger lookaheads (alpha = 0.05). Nonetheless, this initial result should be heavily scrutinized. Later actions should include among others modifying and optimizing the reward function and increasing the sample size of the reinforcement learning trainings (my poor mac has requested I do this on another computer lol). 
+I have tested the model while trained on 0, 1, 3, 5, 8 seconds of future data of the signal, and there is not sufficient evidence to conclude the agent performs better on larger lookahead horizons: $p = 0.5452906 > \alpha = 0.05$; fail to reject the null hypothesis. Nonetheless, this initial result should be heavily scrutinized. Later actions should include among others modifying and optimizing the reward function and increasing the sample size of the reinforcement learning trainings (my poor mac has requested I do this on another computer lol). 
 
 ## Other Project Details
 
-I am testing RHC systems with model size hardware in the Cornell Maker Lab. We will export python, learned model weights to C++ with ONNX to evaluate the systems at the edge. This should introduce other considerations including latency, noisy sensors, and black box decisions to address as well. 
+I am testing RHC systems with model size hardware in the Cornell Maker Lab. We will export trained policy graphs and model weights to C++ with ONNX to evaluate the systems at the edge. This should introduce other considerations including latency, noisy sensors, and black box decisions to address as well. 
 
 
 
